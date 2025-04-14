@@ -1,0 +1,74 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-py"
+  interface = "asyncio"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  name      String
+  userType  String   // "parent" または "child"
+  age       Int?
+  avatarUrl String?
+  parentId  String?  // 子供アカウントの場合、親のIDを参照
+  parent    User?    @relation("ParentToChild", fields: [parentId], references: [id])
+  children  User[]   @relation("ParentToChild")
+  tasks     Task[]
+  badges    UserBadge[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TaskMaster {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  targetAge   Int?     // 対象年齢
+  difficulty  Int      // 難易度（1-5）
+  points      Int      // 達成時のポイント
+  timeEstimate Int?    // 完了目安時間（分）
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Task {
+  id            String   @id @default(cuid())
+  taskMasterId  String
+  taskMaster    TaskMaster @relation(fields: [taskMasterId], references: [id])
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  completedAt   DateTime?
+  isCompleted   Boolean  @default(false)
+  isVerified    Boolean  @default(false)  // 親の確認状態
+  points        Int      // 獲得ポイント
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  condition   String   // 獲得条件の説明
+  iconUrl     String?
+  users       UserBadge[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  badgeId   String
+  badge     Badge    @relation(fields: [badgeId], references: [id])
+  acquiredAt DateTime @default(now())
+
+  @@unique([userId, badgeId])
+}
