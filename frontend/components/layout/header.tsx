@@ -1,8 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
-import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
-import { MoonIcon, SunIcon } from 'lucide-react'
+import { MoonIcon, SunIcon, User } from 'lucide-react'
 
 export function Header() {
   return (
@@ -15,7 +14,9 @@ export function Header() {
             <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">テーマ切替</span>
           </Button>
-          <UserButton afterSignOutUrl="/" />
+          <Button variant="ghost" size="icon">
+            <User className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
         </div>
       </div>
     </header>

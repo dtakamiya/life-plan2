@@ -9,10 +9,10 @@ export default function Home() {
       <p className="text-xl mb-6">家族内でお子様のお手伝いを楽しく管理しましょう</p>
       <div className="flex space-x-4">
         <Button asChild>
-          <Link href="/sign-in">ログイン</Link>
+          <Link href="/dashboard">ダッシュボード</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/sign-up">新規登録</Link>
+          <Link href="/dashboard/tasks">お手伝い一覧</Link>
         </Button>
       </div>
     </div>
