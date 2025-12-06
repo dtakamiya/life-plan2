@@ -1,50 +1,50 @@
-# React + TypeScript + Vite
+# FP1級レベル ライフプラン設計フロントエンド
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite で構築したシングルページアプリです。  
+FastAPI バックエンドの `/plan` エンドポイントへ入力条件を送信し、長期キャッシュフローやリスク警告、ゴール達成状況をダッシュボード表示します。
 
-Currently, two official plugins are available:
+## 主な機能
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 世帯プロフィール / キャッシュフロー / リスク管理 / ゴール設定のマルチセクションフォーム（React Hook Form + Zod）
+- 教育・住宅など最大 6 件のゴールをダイナミックに追加
+- Recharts を使った資産・収入・支出の推移グラフ
+- ゴール達成率、ライフプラン健全度スコア、FIRE 推定年齢、ストレステスト結果の可視化
+- API 連携先は `VITE_API_BASE_URL` で変更可能（デフォルト `http://localhost:8000`）
 
-## Expanding the ESLint configuration
+## セットアップ
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+```bash
+cd frontend
+npm install
 
-- Configure the top-level `parserOptions` property like this:
+# 開発サーバー
+npm run dev
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# 型チェック + ビルド
+npm run build
+
+# ESLint
+npm run lint
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Vite サーバーは `http://localhost:5173` で起動します。
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## バックエンド連携
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+`.env` もしくは `VITE_API_BASE_URL` を設定すると API のベース URL を切り替えられます。
+
+```bash
+echo 'VITE_API_BASE_URL=http://localhost:8000' > .env
 ```
+
+バックエンドは `POST /plan` で `PlanResponse` を返す想定です。  
+レスポンスの主要フィールドは `src/App.tsx` の `PlanResponse` 型を参照してください。
+
+## ビルド成果物
+
+```bash
+npm run build
+# dist/ に index.html とアセットを出力
+```
+
+そのまま `vite preview` で動作確認できます。
